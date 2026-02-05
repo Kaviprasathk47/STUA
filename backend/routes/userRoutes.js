@@ -1,5 +1,5 @@
 import { Router } from "express";
-import {getUserDetailsController,postUserDetailsController} from "../controllers/userController.js";
+import {getUserDetailsController,postUserDetailsController ,postLoginUsingFireBaseCntrl} from "../controllers/userController.js";
 const router = Router();
 //signUp:route here
 router.post("/signup",postUserDetailsController);
@@ -8,5 +8,5 @@ router.post("/signup",postUserDetailsController);
 router.post("/login",getUserDetailsController);
 
 //
-
+router.post("/auth/firebase",postLoginUsingFireBaseCntrl);
 export default router;

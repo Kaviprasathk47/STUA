@@ -1,5 +1,5 @@
-import { getUserDetails, postUserDetails } from '../services/userService.js';
-
+import { getUserDetails, postUserDetails,postLoginUsingFireBaseService } from '../services/userService.js';
+import admin from '../config/fireBaseConfig.js';
 const postUserDetailsController = async (req, res) => {
   try {
     const { name, userName, email, password } = req.body;
@@ -34,4 +34,26 @@ const getUserDetailsController = async (req, res) => {
     });
   }
 };
-export { postUserDetailsController, getUserDetailsController };
+
+const postLoginUsingFireBaseCntrl = async (req,res) => {
+  // To be implemented
+    const { token } = req.body;//fire base token
+    try{
+      const decodedToken = await admin.auth().verifyIdToken(token);
+      const {name, email} = decodedToken;
+      const userRecord = await postLoginUsingFireBaseService({name,email});
+      res.status(201).json({
+        message: "Login using Firebase successful",
+        data: userRecord,
+      });
+    }
+    catch(err)  {
+      res.status(err.statusCode || 500).json({
+        Error:err.message,
+        message:"Error : Login using Firebase failed ",
+      })
+    }
+}
+
+
+export { postUserDetailsController, getUserDetailsController,postLoginUsingFireBaseCntrl };

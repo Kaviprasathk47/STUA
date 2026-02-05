@@ -1,7 +1,7 @@
-import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
-
+import {refreshToken_generate, accessToken_generate} from "../utils/tokenGenerator.js";
+import AppError from "../utils/appError.js";
 
 const postUserDetails = async ({ name, userName, email, password }) => {
     const existingUser = await User.findOne({
@@ -33,16 +33,8 @@ const getUserDetails = async ({userDetail,password}) => {
     if(!isPasswordValid) {
       throw new Error(`Error on SignIN "Invalid password"`);
     }
-    const refreshToken = jwt.sign(
-      {userID:userFound._id},
-      process.env.JWT_REFRESH_SECRET,
-      {expiresIn: process.env.REFRESH_TOKEN_EXPIRY}
-    );
-    const accessToken = jwt.sign(
-      {userId:userFound._id},
-      process.env.JWT_ACCESS_SECRET,
-      {expiresIn: process.env.ACCESS_TOKEN_EXPIRY}
-    );
+    const refreshToken = refreshToken_generate(userFound);
+    const accessToken = accessToken_generate(userFound);
     return {
       userFound,
       refreshToken: refreshToken,
@@ -50,4 +42,17 @@ const getUserDetails = async ({userDetail,password}) => {
     };
 };
 
-export { postUserDetails,getUserDetails };
+const postLoginUsingFireBaseService = async ({name,email}) => {
+  let user = await User.findOne({email:email});
+  if(!user) {
+    user = new User({ name:name, email:email, password:"", date_login: new Date() });
+    await user.save();
+    return user;
+  }
+  else{
+    throw new AppError("User already exists", 409);
+  }
+  
+};
+
+export { postUserDetails,getUserDetails ,postLoginUsingFireBaseService};

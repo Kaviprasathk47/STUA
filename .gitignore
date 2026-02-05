@@ -1,5 +1,7 @@
 /backend/node_modules
 /backend/.env
+/backend/config/firebaseServiceKey.json
+
 
 
 /frontend/node_modules

@@ -71,7 +71,7 @@ const updateVehicleDetailsCntrl = async (req, res) => {
     const { vehicleId } = req.params;
     const { data_to_update } = req.body;
     const VehicleUpdateResponse = await updateVehicleDetailsService(
-        req.user,
+      req.user,
       vehicleId,
       data_to_update,
     );
