@@ -45,14 +45,10 @@ const getUserDetails = async ({userDetail,password}) => {
 const postLoginUsingFireBaseService = async ({name,email}) => {
   let user = await User.findOne({email:email});
   if(!user) {
-    user = new User({ name:name, email:email, password:"", date_login: new Date() });
+    user = new User({ name:name,userName:name, email:email, password:"", date_login: new Date() });
     await user.save();
-    return user;
   }
-  else{
-    throw new AppError("User already exists", 409);
-  }
-  
+  return user;
 };
 
 export { postUserDetails,getUserDetails ,postLoginUsingFireBaseService};

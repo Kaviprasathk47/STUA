@@ -1,7 +1,6 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Mail, Lock, Eye, EyeOff, Leaf, Bus, Bike, Car } from 'lucide-react';
-import { signInWithPopup } from "firebase/auth";
-import { auth, provider } from "../../fireBase/fireBase.js";
+import handleGoogleLogin from '../../fireBase/fireBaseSetUp.jsx';
 
 
 const LoginPage = () =>{
@@ -11,12 +10,7 @@ const LoginPage = () =>{
     password: '',
     rememberMe: false
   });
-  const handleGoogleLogin = async () => {
-  const result = await signInWithPopup(auth, provider);
-  const user = result.user;
-  const firebaseToken = await user.getIdToken();
-  console.log("Firebase ID Token:", firebaseToken);
-};
+
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -138,6 +132,7 @@ const LoginPage = () =>{
                   placeholder="Password"
                   value={formData.password}
                   onChange={handleInputChange}
+                  autoComplete="current-password"
                   className="w-full pl-11 pr-11 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"
                   required
                 />
@@ -207,7 +202,7 @@ const LoginPage = () =>{
                 Don't have an account?{' '}
               </span>
               <a
-                href="/signup"
+                href="/"
                 className="text-green-600 hover:text-green-700 font-semibold transition-colors"
               >
                 Sign Up
