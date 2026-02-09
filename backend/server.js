@@ -1,8 +1,8 @@
-import cors from 'cors';
+import cors from "cors";
 import express from "express";
+import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
-// import tripRoutes from "./routes/tripRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import VehicleRoutes from "./routes/vehicleRoute.js";
 
@@ -11,11 +11,14 @@ dotenv.config();
 connectDB();
 
 const app = express();
-app.use(cors({
+app.use(
+  cors({
     origin: "http://localhost:5173",
-  credentials: true
-}));
+    credentials: true,
+  })
+);
 app.use(express.json());
+app.use(cookieParser());
 app.use("/",userRoutes);
 // app.use("/trips",tripRoutes);
 app.use("/Vehicle",VehicleRoutes)

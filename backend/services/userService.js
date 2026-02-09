@@ -1,14 +1,14 @@
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
-import {refreshToken_generate, accessToken_generate} from "../utils/tokenGenerator.js";
 import AppError from "../utils/appError.js";
+import {refreshToken_generate, accessToken_generate} from "../utils/tokenGenerator.js";
 
 const postUserDetails = async ({ name, userName, email, password }) => {
     const existingUser = await User.findOne({
       $or: [{ email }, { userName }],
     });
     if (existingUser) {
-      throw new Error(`Error on SignUP "User already exists"`);
+      throw new AppError("User already exists", 409);
     }
     const hashedPassword = await bcrypt.hash(password,10);
     const user = new User({
@@ -27,11 +27,11 @@ const getUserDetails = async ({userDetail,password}) => {
       $or: [{ email:userDetail }, { userName:userDetail}],
     });
     if(!userFound) {
-      throw new Error(`Error on SignIN "User not found"`);
+      throw new AppError("User not found", 404);
     }
     const isPasswordValid = await bcrypt.compare(password,userFound.password);
     if(!isPasswordValid) {
-      throw new Error(`Error on SignIN "Invalid password"`);
+      throw new AppError("Invalid password", 401);
     }
     const refreshToken = refreshToken_generate(userFound);
     const accessToken = accessToken_generate(userFound);

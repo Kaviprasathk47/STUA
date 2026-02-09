@@ -1,15 +1,12 @@
-import React from 'react'
-import LoginPage from './pages/loginPage/login.jsx';
-import SignUpPage from './pages/signUpPage/signUpPage.jsx';
-import { Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
+import AppRouter from "./router/appRouter.jsx";
 
-const App = () => {
+function App() {
   return (
-    <Routes>
-      <Route path="/login" element = {<LoginPage />} />
-      <Route path="/" element = {<SignUpPage />} />
-    </Routes>
-  )
+    <AuthProvider>
+      <AppRouter />
+    </AuthProvider>
+  );
 }
 
-export default App
+export default App;
