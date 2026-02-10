@@ -7,8 +7,11 @@ const userVehicleSchema = new mongoose.Schema({
   vehicle_name: String,
   vehicle_model: String,
   vehicle_manufacture_date: Date,
-  vehicle_emission_rating: Number
+  fuel_type: String,
+  vehicle_type: String,
+  vehicle_emission_rating: Number,
+  vehicle_engine_size: String,
 });
 const Vehicle = mongoose.model("UserVehicle", userVehicleSchema);
-export default Vehicle; 
+export default Vehicle;
 

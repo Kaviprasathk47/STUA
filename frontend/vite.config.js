@@ -8,6 +8,7 @@ export default defineConfig({
   server: {
     allowedHosts: [
       "valentin-windiest-paramountly.ngrok-free.dev"
-    ]
+    ],
+
   }
 })

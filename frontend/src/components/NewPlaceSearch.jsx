@@ -64,6 +64,7 @@ const NewPlaceSearch = ({ onPlaceSelected, placeholder, id, className = "" }) =>
 
           onPlaceSelected?.({
             address,
+            name: displayName,
             place:
               lat != null && lng != null ? { lat, lng } : null,
           });

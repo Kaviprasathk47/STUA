@@ -11,14 +11,23 @@ const posttheVehicleDetailsCntrl = async (req, res) => {
     const {
       vehicle_name,
       vehicle_model,
+      vehicle_type,
       vehicle_manufacture_date,
+      fuel_type,
       vehicle_emission_rating,
     } = req.body;
+
+    // Log for debugging
+    console.log("Adding vehicle:", req.body);
+    console.log("User ID:", req.user);
+
     const vechiclResponse = await posttheVehicleDetailsService(
-      req.user,
+      req.user, // Use req.user directly (it is the ID string)
       vehicle_name,
       vehicle_model,
+      vehicle_type,
       vehicle_manufacture_date,
+      fuel_type,
       vehicle_emission_rating,
     );
     res.status(201).json({
@@ -26,6 +35,7 @@ const posttheVehicleDetailsCntrl = async (req, res) => {
       data: vechiclResponse,
     });
   } catch (error) {
+    console.error("Error adding vehicle:", error);
     res.status(500).json({
       message: "Post Function failed",
       error: error.message,
@@ -68,16 +78,20 @@ const getTheVehicleDetailsAllCntrl = async (req, res) => {
 };
 const updateVehicleDetailsCntrl = async (req, res) => {
   try {
-    const { vehicleId } = req.params;
-    const { data_to_update } = req.body;
+    const { id } = req.params; // Route uses :id
+    const data_to_update = req.body; // Frontend sends data directly
+
+    console.log("Updating Vehicle ID:", id);
+    console.log("Update Data:", data_to_update);
+
     const VehicleUpdateResponse = await updateVehicleDetailsService(
       req.user,
-      vehicleId,
+      id,
       data_to_update,
     );
     res.status(200).json({
       message: "Vehicle details updated successfully",
-      VehicleUpdateResponse,
+      data: VehicleUpdateResponse,
     });
   } catch (err) {
     res.status(500).json({

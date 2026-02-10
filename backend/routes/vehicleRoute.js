@@ -8,9 +8,9 @@ const router = Router();
 router.post("/create",protect,posttheVehicleDetailsCntrl);
 
 //GETTING THE Vehicle DETAILS (by id ,by name , all)
-router.get("/get/:identifier",protect,getTheVehicleDetailsCntrl); // -> sending the common name parameter can be enough to overcome the id or name issuses
-
 router.get("/get/all",protect,getTheVehicleDetailsAllCntrl);
+
+router.get("/get/:identifier",protect,getTheVehicleDetailsCntrl); // -> sending the common name parameter can be enough to overcome the id or name issuses
 
 //UPDATING THE Vehicle DETAILS
 router.put("/update/:id",protect,updateVehicleDetailsCntrl);

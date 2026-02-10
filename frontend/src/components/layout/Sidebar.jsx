@@ -7,6 +7,7 @@ import {
   Settings,
   Lightbulb,
   X,
+  Car,
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 import Logo from "../ui/Logo";
@@ -15,7 +16,8 @@ const Sidebar = ({ isOpen, onClose }) => {
   const navItems = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Trips", path: "/trips", icon: MapPin },
-    { name: "Analytics", path: "/analytics", icon: BarChart3 },
+    { name: "My Vehicles", path: "/vehicles", icon: Car },
+    { name: "Analysis", path: "/analysis", icon: BarChart3 },
     { name: "Sustainability", path: "/sustainability", icon: Sprout },
     { name: "Settings", path: "/settings", icon: Settings },
   ];
@@ -78,11 +80,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                     relative w-full flex items-center rounded-xl
                     transition-all duration-200 group
                     ${isOpen ? "gap-3 px-4 py-3" : "justify-center py-3"}
-                    ${
-                      isActive
-                        ? "bg-white text-emerald-700 shadow-lg"
-                        : "text-white hover:bg-white/10"
-                    }
+                    ${isActive
+                    ? "bg-white text-emerald-700 shadow-lg"
+                    : "text-white hover:bg-white/10"
+                  }
                   `
                 }
               >

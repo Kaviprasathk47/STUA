@@ -1,12 +1,16 @@
 import { useRef, useState, useCallback } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
 import {
   useJsApiLoader,
   GoogleMap,
   DirectionsRenderer,
   Marker,
 } from "@react-google-maps/api";
-import { MapPin, Navigation, Loader2 } from "lucide-react";
+import { MapPin, Navigation, Loader2, Leaf, Calendar } from "lucide-react";
 import NewPlaceSearch from "../../components/NewPlaceSearch";
+// import TransportComparison from "../../components/TransportComparison";
 
 const DEFAULT_CENTER = { lat: 51.5074, lng: -0.1278 };
 const MAP_CONTAINER_STYLE = { width: "100%", height: "100%", minHeight: "400px" };
@@ -23,8 +27,10 @@ const GOOGLE_MAPS_LIBRARIES = ["places"];
 const apiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY?.trim() || "";
 
 const Trips = () => {
-  const [origin, setOrigin] = useState({ address: "", place: null });
-  const [destination, setDestination] = useState({ address: "", place: null });
+  const navigate = useNavigate();
+  const [origin, setOrigin] = useState({ address: "", name: "", place: null });
+  const [destination, setDestination] = useState({ address: "", name: "", place: null });
+  const [travelDate, setTravelDate] = useState(new Date().toISOString().slice(0, 10)); // Default to today
   const [directions, setDirections] = useState(null);
   const [routeLoading, setRouteLoading] = useState(false);
   const [mapError, setMapError] = useState(null);
@@ -47,13 +53,13 @@ const Trips = () => {
     }
   }, []);
 
-  const onOriginPlaceSelected = useCallback(({ address, place }) => {
-    setOrigin({ address: address ?? "", place });
+  const onOriginPlaceSelected = useCallback(({ address, name, place }) => {
+    setOrigin({ address: address ?? "", name: name ?? "", place });
     setDirections(null);
   }, []);
 
-  const onDestinationPlaceSelected = useCallback(({ address, place }) => {
-    setDestination({ address: address ?? "", place });
+  const onDestinationPlaceSelected = useCallback(({ address, name, place }) => {
+    setDestination({ address: address ?? "", name: name ?? "", place });
     setDirections(null);
   }, []);
 
@@ -81,6 +87,7 @@ const Trips = () => {
             bounds.extend(step.end_location);
           });
           mapRef.current?.fitBounds(bounds, { top: 48, right: 48, bottom: 48, left: 48 });
+
         } else {
           setMapError("Could not find a route between these places.");
         }
@@ -90,8 +97,8 @@ const Trips = () => {
 
   const clearRoute = useCallback(() => {
     setDirections(null);
-    setOrigin({ address: "", place: null });
-    setDestination({ address: "", place: null });
+    setOrigin({ address: "", name: "", place: null });
+    setDestination({ address: "", name: "", place: null });
     setMapError(null);
   }, []);
 
@@ -162,13 +169,13 @@ const Trips = () => {
   }
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto bg-slate-50 min-h-screen">
       <div>
-        <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-2">
-          <MapPin className="w-7 h-7 text-emerald-600" />
+        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+          <MapPin className="w-8 h-8 text-emerald-600" />
           Trips
         </h1>
-        <p className="text-slate-600 mt-1">
+        <p className="text-gray-600 mt-1">
           Enter start and destination to see your route on the map.
         </p>
       </div>
@@ -180,7 +187,7 @@ const Trips = () => {
           <NewPlaceSearch
             placeholder="Search start location..."
             onPlaceSelected={onOriginPlaceSelected}
-            className="place-autocomplete-wrapper w-full"
+            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 bg-white transition-all text-slate-700"
           />
           {origin.address && (
             <p className="mt-1 text-xs text-slate-500 truncate" title={origin.address}>
@@ -193,13 +200,39 @@ const Trips = () => {
           <NewPlaceSearch
             placeholder="Search destination..."
             onPlaceSelected={onDestinationPlaceSelected}
-            className="place-autocomplete-wrapper w-full"
+            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 bg-white transition-all text-slate-700"
           />
           {destination.address && (
             <p className="mt-1 text-xs text-slate-500 truncate" title={destination.address}>
               {destination.address}
             </p>
           )}
+        </div>
+      </div>
+
+      {/* Date Input */}
+      <div>
+        <label className="block text-sm font-medium text-slate-700 mb-1">Date of Travel</label>
+        <div className="relative max-w-sm custom-datepicker-wrapper">
+          <DatePicker
+            selected={travelDate ? new Date(travelDate) : new Date()}
+            onChange={(date) => {
+              if (date) {
+                // Adjust for timezone offset to keep strict date
+                const offset = date.getTimezoneOffset();
+                const localDate = new Date(date.getTime() - (offset * 60 * 1000));
+                setTravelDate(localDate.toISOString().split('T')[0]);
+              } else {
+                setTravelDate("");
+              }
+            }}
+            dateFormat="dd MMM yyyy"
+            className="w-full px-4 py-1.5 pl-4 pr-10 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-slate-700 bg-white cursor-pointer"
+            wrapperClassName="w-full"
+            placeholderText="Select a date"
+            onKeyDown={(e) => e.preventDefault()} // Prevent typing
+          />
+          <Calendar className="absolute right-3 top-2.5 w-5 h-5 text-slate-400 pointer-events-none" />
         </div>
       </div>
 
@@ -224,13 +257,39 @@ const Trips = () => {
         >
           Clear
         </button>
+        {directions && (
+          <button
+            type="button"
+            onClick={() => {
+              const leg = directions.routes[0].legs[0];
+              navigate('/transport-comparison', {
+                state: {
+                  distanceMeters: leg.distance.value,
+                  durationSeconds: leg.duration.value,
+                  durationSeconds: leg.duration.value,
+                  origin: leg.start_address,
+                  originName: origin.name || leg.start_address,
+                  destination: leg.end_address,
+                  destinationName: destination.name || leg.end_address,
+                  date: travelDate
+                }
+              });
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-xl font-medium hover:from-emerald-600 hover:to-teal-700 shadow-md transform transition-all hover:scale-[1.02] active:scale-[0.98]"
+          >
+            <Leaf className="w-4 h-4" />
+            Analyze Eco-Impact
+          </button>
+        )}
       </div>
 
-      {mapError && (
-        <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-700">
-          {mapError}
-        </div>
-      )}
+      {
+        mapError && (
+          <div className="rounded-lg bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-700">
+            {mapError}
+          </div>
+        )
+      }
 
       {/* Map */}
       <div className="rounded-2xl overflow-hidden border border-slate-200 bg-slate-100 shadow-sm">
@@ -261,6 +320,9 @@ const Trips = () => {
           </GoogleMap>
         </div>
       </div>
+
+
+
     </div>
   );
 };

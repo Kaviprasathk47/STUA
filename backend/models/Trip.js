@@ -10,7 +10,9 @@ const tripSchema = new mongoose.Schema({
     ref: "UserVehicleDetails"
   },
   source: String,
+  sourceDisplayName: String,
   destination: String,
+  destinationDisplayName: String,
   distance: Number,
   mode: String, // car, bus, train, bike
   emission: Number,

@@ -1,0 +1,93 @@
+[
+  {
+    "vehicleCategory": "car",
+    "fuelType": "petrol",
+    "engineSize": "small",
+    "emissionFactor_g_per_km": 120,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "petrol",
+    "engineSize": "medium",
+    "emissionFactor_g_per_km": 145,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "petrol",
+    "engineSize": "large",
+    "emissionFactor_g_per_km": 175,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "diesel",
+    "engineSize": "small",
+    "emissionFactor_g_per_km": 110,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "diesel",
+    "engineSize": "medium",
+    "emissionFactor_g_per_km": 150,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "diesel",
+    "engineSize": "large",
+    "emissionFactor_g_per_km": 180,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "hybrid",
+    "engineSize": "average",
+    "emissionFactor_g_per_km": 90,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "car",
+    "fuelType": "electric",
+    "engineSize": "average",
+    "emissionFactor_g_per_km": 15,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "bus",
+    "fuelType": "diesel",
+    "engineSize": "average",
+    "emissionFactor_g_per_km": 80,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "train",
+    "fuelType": "electric",
+    "engineSize": "average",
+    "emissionFactor_g_per_km": 35,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "motorcycle",
+    "fuelType": "petrol",
+    "engineSize": "average",
+    "emissionFactor_g_per_km": 90,
+    "source": "UK DEFRA GHG Conversion Factors"
+  },
+  {
+    "vehicleCategory": "bicycle",
+    "fuelType": "human",
+    "engineSize": "na",
+    "emissionFactor_g_per_km": 0,
+    "source": "Zero emission"
+  },
+  {
+    "vehicleCategory": "walking",
+    "fuelType": "human",
+    "engineSize": "na",
+    "emissionFactor_g_per_km": 0,
+    "source": "Zero emission"
+  }
+]

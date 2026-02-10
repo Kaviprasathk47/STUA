@@ -1,12 +1,15 @@
 // Navbar.jsx - Top navigation bar component
 import { Menu, User, LogOut, ChevronDown, PanelLeftClose } from 'lucide-react';
-import {useAuth} from "../../context/AuthContext.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import { useState } from 'react';
 import Logo from '../ui/Logo';
 
-const Navbar = ({ onMenuClick, userName = "Alex Green", sidebarOpen = false }) => {
+const Navbar = ({ onMenuClick, sidebarOpen = false }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
+
+  const displayName = user?.name || user?.userName || "User";
+  const displayEmail = user?.email || "";
 
   return (
     <nav className="fixed top-0 left-0 right-0 h-16 bg-white shadow-sm z-50 animate-fade-in">
@@ -56,12 +59,12 @@ const Navbar = ({ onMenuClick, userName = "Alex Green", sidebarOpen = false }) =
               <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-linear-to-br from-emerald-400 to-teal-500 flex items-center justify-center shadow-md group-hover:shadow-lg transition-shadow">
                 <User className="w-4 h-4 md:w-5 md:h-5 text-white" />
               </div>
-              
+
               {/* User Name - Hidden on mobile */}
               <span className="hidden md:block text-sm font-medium text-gray-700 group-hover:text-gray-900 transition-colors">
-                {userName}
+                {displayName}
               </span>
-              
+
               {/* Dropdown Icon */}
               <ChevronDown className={`hidden md:block w-4 h-4 text-gray-500 transition-transform ${showDropdown ? 'rotate-180' : ''}`} />
             </button>
@@ -70,8 +73,8 @@ const Navbar = ({ onMenuClick, userName = "Alex Green", sidebarOpen = false }) =
             {showDropdown && (
               <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden animate-scale-in">
                 <div className="p-3 bg-linear-to-br from-emerald-50 to-teal-50 border-b border-slate-200">
-                  <p className="text-sm font-semibold text-gray-800">{userName}</p>
-                  <p className="text-xs text-gray-500">alex.green@email.com</p>
+                  <p className="text-sm font-semibold text-gray-800">{displayName}</p>
+                  <p className="text-xs text-gray-500 truncate">{displayEmail}</p>
                 </div>
                 <button
                   onClick={logout}

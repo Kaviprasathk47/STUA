@@ -32,13 +32,78 @@ const Dashboard = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-console.log("Dashboard data:", data);
+  const [selectedTrip, setSelectedTrip] = useState(null);
+
+  const RouteModal = ({ trip, onClose }) => {
+    if (!trip) return null;
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="bg-white rounded-2xl w-full max-w-md p-6 shadow-xl relative animate-in fade-in zoom-in duration-200">
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition-colors"
+          >
+            <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12" /></svg>
+          </button>
+
+          <h3 className="text-lg font-bold text-slate-800 mb-6 flex items-center gap-2">
+            <MapPin className="w-5 h-5 text-emerald-600" />
+            Trip Route Details
+          </h3>
+
+          <div className="space-y-6">
+            <div className="relative pl-6 border-l-2 border-emerald-100 space-y-8">
+              {/* Origin Point */}
+              <div className="relative">
+                <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-emerald-600 ring-4 ring-emerald-50"></div>
+                <div>
+                  <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">Start Location</span>
+                  <p className="font-semibold text-slate-800 text-lg leading-tight">
+                    {trip.sourceDisplayName || (trip.source ? trip.source.split(',')[0] : 'Unknown Start')}
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    {trip.source || 'Address not available'}
+                  </p>
+                </div>
+              </div>
+
+              {/* Destination Point */}
+              <div className="relative">
+                <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-red-500 ring-4 ring-red-50"></div>
+                <div>
+                  <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1 block">Destination</span>
+                  <p className="font-semibold text-slate-800 text-lg leading-tight">
+                    {trip.destinationDisplayName || (trip.destination ? trip.destination.split(',')[0] : 'Unknown Destination')}
+                  </p>
+                  <p className="text-sm text-slate-500 mt-1">
+                    {trip.destination || 'Address not available'}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-6 border-t border-slate-100 grid grid-cols-2 gap-4">
+              <div>
+                <span className="text-xs text-slate-500 block mb-1">Distance</span>
+                <span className="font-semibold text-slate-800">{trip.distance} km</span>
+              </div>
+              <div>
+                <span className="text-xs text-slate-500 block mb-1">Transport Mode</span>
+                <span className="font-semibold text-slate-800 capitalize">{trip.mode}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+  console.log("Dashboard data:", data);
   // Fetch dashboard data
   useEffect(() => {
     const fetchDashboard = async () => {
       try {
         const res = await api.get("/dashboard");
-        setData(mock_data);
+        setData(res.data);
       } catch (err) {
         setError("Failed to load dashboard data");
       } finally {
@@ -172,10 +237,11 @@ console.log("Dashboard data:", data);
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-left py-2">Date</th>
-                <th className="text-left py-2">Mode</th>
-                <th className="text-left py-2">Distance</th>
-                <th className="text-left py-2">CO₂</th>
+                <th className="text-left py-2 font-semibold text-slate-600">Date</th>
+                <th className="text-left py-2 font-semibold text-slate-600">Mode</th>
+                <th className="text-left py-2 font-semibold text-slate-600">Route</th>
+                <th className="text-left py-2 font-semibold text-slate-600">Distance</th>
+                <th className="text-left py-2 font-semibold text-slate-600">CO₂ (kg)</th>
               </tr>
             </thead>
             <tbody>
@@ -185,14 +251,22 @@ console.log("Dashboard data:", data);
                     <Calendar className="w-4 h-4 text-gray-400" />
                     {trip.date}
                   </td>
-                  <td>{trip.mode}</td>
-                  <td>{trip.distance} km</td>
+                  <td className="py-3 text-slate-600">{trip.mode}</td>
+                  <td className="py-3">
+                    <button
+                      onClick={() => setSelectedTrip(trip)}
+                      className="text-sm text-emerald-600 font-medium hover:text-emerald-700 hover:bg-emerald-50 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5"
+                    >
+                      <MapPin className="w-4 h-4" />
+                      View Details
+                    </button>
+                  </td>
+                  <td className="py-3 text-slate-600">{trip.distance} km</td>
                   <td
-                    className={
-                      trip.co2 < 0 ? "text-green-600" : "text-red-500"
-                    }
+                    className={`py-3 font-medium ${trip.co2 < 0 ? "text-green-600" : "text-amber-600"
+                      }`}
                   >
-                    {trip.co2} kg
+                    {trip.co2}
                   </td>
                 </tr>
               ))}
@@ -200,6 +274,14 @@ console.log("Dashboard data:", data);
           </table>
         </div>
       </div>
+
+      {/* Route Modal */}
+      {selectedTrip && (
+        <RouteModal
+          trip={selectedTrip}
+          onClose={() => setSelectedTrip(null)}
+        />
+      )}
     </div>
   );
 };

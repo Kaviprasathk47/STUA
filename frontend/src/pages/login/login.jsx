@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { Mail, Lock, Eye, EyeOff, Leaf, Bus, Bike, Car } from 'lucide-react';
 import handleGoogleLogin from "../../services/fireBaseSetUp.jsx";
 import emailVerification from "../EmailVerifier/emailVerifier.jsx";
@@ -29,7 +30,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (emailVerification(formData.email) === false) {
-      alert("Invalid email format. Please enter a valid email address.");
+      toast.error("Invalid email format. Please enter a valid email address.");
       setFormData(initialFormData);
       return;
     }
@@ -40,16 +41,17 @@ const LoginPage = () => {
       });
       const accessToken = response.data?.data?.accessToken;
       if (!accessToken) {
-        alert("Login succeeded but no token received.");
+        toast.error("Login succeeded but no token received.");
         return;
       }
       login(accessToken);
-      alert(response.data.message);
+      toast.success("Welcome back!");
       navigate("/dashboard");
     }
     catch (err) {
       console.error('Login error:', err);
-      alert('An error occurred during login. Please try again.');
+      // specific error handled by interceptor, but fallback here
+      // toast.error(err.response?.data?.message || 'An error occurred during login. Please try again.');
     }
   };
 
@@ -146,6 +148,7 @@ const LoginPage = () => {
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
+                  autoComplete="email"
                   className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"
                   required
                 />
@@ -212,7 +215,7 @@ const LoginPage = () => {
               <button
                 type="button"
                 className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-300 transform hover:scale-[1.02] transition-all duration-200 shadow-sm hover:shadow-md"
-                onClick={handleGoogleLogin}
+                onClick={() => handleGoogleLogin(navigate, login)}
               >
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

@@ -1,0 +1,31 @@
+[
+  {
+    "id": "698ac15925a898ede2efceb5",
+    "userId": "698ab0d21818f5b49ac8034d",
+    "vehicleId": "698ab1cd024645b59934d16c",
+    "mode": "Royal enfield",
+    "date": "2026-02-10T05:25:45.387Z",
+    "linkedVehicleName": "Royal enfield"
+  },
+  {
+    "id": "698abd97eb71ad17bc501de0",
+    "userId": "698ab0d21818f5b49ac8034d",
+    "mode": "Bicycle",
+    "date": "2026-02-10T05:09:43.778Z",
+    "linkedVehicleName": "N/A"
+  },
+  {
+    "id": "698ab64cfa369949e96207a2",
+    "userId": "698ab0d21818f5b49ac8034d",
+    "mode": "Bus",
+    "date": "2026-02-10T04:38:36.110Z",
+    "linkedVehicleName": "N/A"
+  },
+  {
+    "id": "698ab1b8024645b59934d157",
+    "userId": "698ab0d21818f5b49ac8034d",
+    "mode": "Train",
+    "date": "2026-02-10T04:19:04.318Z",
+    "linkedVehicleName": "N/A"
+  }
+]

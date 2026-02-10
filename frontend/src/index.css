@@ -18,15 +18,19 @@
 
 /* Custom utility classes and animations */
 @layer utilities {
+
   /* Float animation for logo */
   .animate-float {
     animation: float 3s ease-in-out infinite;
   }
-  
+
   @keyframes float {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translateY(0px);
     }
+
     50% {
       transform: translateY(-10px);
     }
@@ -42,6 +46,7 @@
       transform: translateX(100%);
       opacity: 0;
     }
+
     to {
       transform: translateX(0);
       opacity: 1;
@@ -58,6 +63,7 @@
       opacity: 0;
       transform: translateY(10px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
@@ -74,9 +80,129 @@
       transform: scale(0.95);
       opacity: 0;
     }
+
     to {
       transform: scale(1);
       opacity: 1;
     }
   }
+
+  /* Slide in animation for list items */
+  .animate-slide-in {
+    animation: slideIn 0.4s ease-out forwards;
+    opacity: 0;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  /* Simple fade animation for backdrops */
+  .animate-fade {
+    animation: fade 0.2s ease-out;
+  }
+
+  @keyframes fade {
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
+  }
+}
+
+/* Google Places Autocomplete Overrides */
+/* Target the web component to make it blend with our custom wrapper */
+gmp-place-autocomplete {
+  --gm-px-color-surface: transparent;
+  --gm-px-color-on-surface: inherit;
+  --gm-px-color-on-surface-variant: #64748b;
+  /* slate-500 */
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Hide the internal input border/background if possible or ensure it fits */
+/* Note: Shadow DOM prevents direct selection unless parts are exposed. */
+/* React DatePicker Customization */
+.react-datepicker {
+  font-family: inherit;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.react-datepicker__header {
+  background-color: #f0fdf4;
+  /* emerald-50 */
+  border-bottom: 1px solid #e2e8f0;
+  padding-top: 12px;
+}
+
+.react-datepicker__current-month {
+  color: #047857;
+  /* emerald-700 */
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.react-datepicker__day-name {
+  color: #059669;
+  /* emerald-600 */
+  margin: 0.3rem;
+}
+
+.react-datepicker__day {
+  margin: 0.3rem;
+  border-radius: 9999px;
+  width: 2rem;
+  line-height: 2rem;
+  color: #334155;
+}
+
+.react-datepicker__day:hover {
+  background-color: #d1fae5;
+  /* emerald-100 */
+  color: #065f46;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__day--keyboard-selected {
+  background-color: #10b981 !important;
+  /* emerald-500 */
+  color: white !important;
+}
+
+.react-datepicker__day--today {
+  font-weight: bold;
+  color: #10b981;
+}
+
+.react-datepicker__triangle {
+  display: none;
+}
+
+.react-datepicker__navigation-icon::before {
+  border-color: #059669;
+  /* emerald-600 */
+  border-width: 2px 2px 0 0;
+}
+
+.custom-datepicker-wrapper .react-datepicker-wrapper {
+  width: 100%;
+}
+
+.custom-datepicker-wrapper .react-datepicker__input-container {
+  width: 100%;
 }

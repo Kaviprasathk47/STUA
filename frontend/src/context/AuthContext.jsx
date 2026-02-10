@@ -6,18 +6,21 @@ const TOKEN_KEY = "accessToken";
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
 
   const clearToken = useCallback(() => {
     sessionStorage.removeItem(TOKEN_KEY);
     setIsAuthenticated(false);
+    setUser(null);
   }, []);
 
   const setToken = useCallback((token) => {
     if (token) {
       sessionStorage.setItem(TOKEN_KEY, token);
       setIsAuthenticated(true);
+      // We could trigger a fetchUser here if we wanted to be sure
     } else {
       clearToken();
     }
@@ -26,6 +29,11 @@ export const AuthProvider = ({ children }) => {
   /** Call after successful login: store token and mark authenticated */
   const login = useCallback((token) => {
     setToken(token);
+    // Trigger immediate fetch of user details after login
+    api
+      .get("/auth/me")
+      .then((res) => setUser(res.data.user))
+      .catch((err) => console.error("Failed to fetch user after login", err));
   }, [setToken]);
 
   const logout = useCallback(() => {
@@ -41,24 +49,39 @@ export const AuthProvider = ({ children }) => {
     }
     api
       .get("/auth/me")
-      .then(() => setIsAuthenticated(true))
+      .then((res) => {
+        setIsAuthenticated(true);
+        setUser(res.data.user);
+      })
       .catch(() => clearToken())
       .finally(() => setLoading(false));
   }, [clearToken]);
+
+  const refreshUser = useCallback(async () => {
+    try {
+      const res = await api.get("/auth/me");
+      setUser(res.data.user);
+    } catch (err) {
+      console.error("Failed to refresh user", err);
+    }
+  }, []);
 
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated,
+        user,
         loading,
         login,
         logout,
         setToken,
+        refreshUser,
       }}
     >
       {children}
     </AuthContext.Provider>
   );
+
 };
 
 export const useAuth = () => {

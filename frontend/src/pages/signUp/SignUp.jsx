@@ -1,23 +1,25 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { User, Mail, Lock, Eye, EyeOff, Leaf, Bus, Bike, Car } from 'lucide-react';
-import axios from 'axios';
 import handleGoogleLogin from '../../services/fireBaseSetUp.jsx';
 import emailVerification from '../EmailVerifier/emailVerifier.jsx';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext.jsx';
 import api from '../../services/axios.jsx';
 
 const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
+  const { login } = useAuth();
   const initialFormData = {
-  name: "",
-  email: "",
-  password: "",
-  terms: false
-};
+    name: "",
+    email: "",
+    password: "",
+    terms: false
+  };
 
-const [formData, setFormData] = useState(initialFormData);
+  const [formData, setFormData] = useState(initialFormData);
 
 
   const handleInputChange = (e) => {
@@ -31,12 +33,12 @@ const [formData, setFormData] = useState(initialFormData);
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert('Passwords do not match!');
+      toast.error('Passwords do not match!');
       setFormData(initialFormData);
       return;
     }
-    if(emailVerification(formData.email) === false){
-      alert("Invalid email format. Please enter a valid email address.");
+    if (emailVerification(formData.email) === false) {
+      toast.error("Invalid email format. Please enter a valid email address.");
       setFormData(initialFormData);
       return;
     }
@@ -47,12 +49,13 @@ const [formData, setFormData] = useState(initialFormData);
         email: formData.email,
         password: formData.password,
       });
-      alert(response.data.message);
+      toast.success(response.data.message || "Account created successfully!");
       navigate("/login");
     }
     catch (err) {
       console.error('Error during sign up:', err);
-      alert('An error occurred during sign up. Please try again.');
+      // handled by interceptor or fallback
+      toast.error(err.response?.data?.message || 'An error occurred during sign up. Please try again.');
     }
   };
 
@@ -149,6 +152,7 @@ const [formData, setFormData] = useState(initialFormData);
                   placeholder="Full Name"
                   value={formData.fullName}
                   onChange={handleInputChange}
+                  autoComplete="name"
                   className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"
                   required
                 />
@@ -163,6 +167,7 @@ const [formData, setFormData] = useState(initialFormData);
                   placeholder="Email Address"
                   value={formData.email}
                   onChange={handleInputChange}
+                  autoComplete="email"
                   className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"
                   required
                 />
@@ -199,6 +204,7 @@ const [formData, setFormData] = useState(initialFormData);
                   placeholder="Confirm Password"
                   value={formData.confirmPassword}
                   onChange={handleInputChange}
+                  autoComplete="new-password"
                   className="w-full pl-11 pr-11 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"
                   required
                 />
@@ -233,7 +239,7 @@ const [formData, setFormData] = useState(initialFormData);
               <button
                 type="button"
                 className="w-full flex items-center justify-center gap-3 bg-white border-2 border-gray-200 text-gray-700 py-3 rounded-xl font-semibold hover:bg-gray-50 hover:border-gray-300 transform hover:scale-[1.02] transition-all duration-200 shadow-sm hover:shadow-md"
-                onClick={handleGoogleLogin}>
+                onClick={() => handleGoogleLogin(navigate, login)}>
                 <svg className="w-5 h-5" viewBox="0 0 24 24">
                   <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
                   <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
