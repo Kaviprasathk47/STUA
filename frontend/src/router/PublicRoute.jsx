@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
  * Public routes (login, signup). If already authenticated, redirect to dashboard.
  */
 const PublicRoute = () => {
-  const { isAuthenticated, loading } = useAuth();
+  const { isAuthenticated, loading} = useAuth();
 
   if (loading) {
     return (
@@ -16,7 +16,9 @@ const PublicRoute = () => {
   }
 
   if (isAuthenticated) {
-    return <Navigate to="/dashboard" replace />;
+    // Default to user role if role is undefined
+
+    return <Navigate to={`/dashboard`} replace />;
   }
 
   return <Outlet />;

@@ -55,3 +55,82 @@ export const getTravelHistoryService = async (userId) => {
         .populate("tripId", "source destination");
     return history;
 };
+
+export const updateTripService = async (
+    tripId,
+    userId,
+    updateData // { source, sourceDisplayName, destination, destinationDisplayName, mode, vehicleId, distance, emission }
+) => {
+    // 1. Find the trip and verify ownership
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) {
+        const error = new Error("Trip not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (trip.userId.toString() !== userId.toString()) {
+        const error = new Error("Unauthorized: You can only edit your own trips");
+        error.statusCode = 403;
+        throw error;
+    }
+
+    // 2. Update trip fields
+    if (updateData.source !== undefined) trip.source = updateData.source;
+    if (updateData.sourceDisplayName !== undefined) trip.sourceDisplayName = updateData.sourceDisplayName;
+    if (updateData.destination !== undefined) trip.destination = updateData.destination;
+    if (updateData.destinationDisplayName !== undefined) trip.destinationDisplayName = updateData.destinationDisplayName;
+    if (updateData.mode !== undefined) trip.mode = updateData.mode;
+    if (updateData.vehicleId !== undefined) trip.vehicleId = updateData.vehicleId;
+
+    // 3. Recalculate distance and emission (these MUST be provided from frontend calculation)
+    if (updateData.distance !== undefined) trip.distance = updateData.distance;
+    if (updateData.emission !== undefined) trip.emission = updateData.emission;
+
+    // 4. Update timestamp
+    trip.lastUpdatedAt = new Date();
+
+    // 5. Save updated trip
+    const updatedTrip = await trip.save();
+
+    // 6. Update corresponding travel_details record
+    await travel_details.findOneAndUpdate(
+        { tripId: tripId },
+        {
+            mode: trip.mode,
+            distance_travelled_km: trip.distance,
+            data_travelled_co2: trip.emission,
+            vehicleId: trip.vehicleId
+        }
+    );
+
+    return updatedTrip;
+};
+
+export const deleteTripService = async (tripId, userId) => {
+    // 1. Find the trip and verify ownership
+    const trip = await Trip.findById(tripId);
+
+    if (!trip) {
+        const error = new Error("Trip not found");
+        error.statusCode = 404;
+        throw error;
+    }
+
+    if (trip.userId.toString() !== userId.toString()) {
+        const error = new Error("Unauthorized: You can only delete your own trips");
+        error.statusCode = 403;
+        throw error;
+    }
+
+    // 2. Delete the trip
+    await Trip.findByIdAndDelete(tripId);
+
+    // 3. Delete corresponding travel_details record
+    await travel_details.findOneAndDelete({ tripId: tripId });
+
+
+    return { message: "Trip deleted successfully" };
+};
+

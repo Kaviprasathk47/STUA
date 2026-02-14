@@ -68,8 +68,8 @@ const AnalysisPage = () => {
     return (
         <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto bg-slate-50 min-h-screen">
             <div>
-                <h1 className="text-3xl font-bold text-gray-800">Sustainability Analysis</h1>
-                <p className="text-gray-600">Track and understand your environmental impact.</p>
+                <h1 className="text-3xl font-bold text-slate-800">Sustainability Analysis</h1>
+                <p className="text-slate-500">Track and understand your environmental impact.</p>
             </div>
 
             {/* Community Impact Section */}
@@ -83,20 +83,20 @@ const AnalysisPage = () => {
             {/* Charts Section */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <ModeBreakdownChart data={modeData} />
-                <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
                     <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800">Emission Trend</h3>
+                        <h3 className="text-lg font-semibold text-slate-800">Emission Trend</h3>
                         <div className="relative">
                             <select
                                 value={timeRange}
                                 onChange={(e) => setTimeRange(Number(e.target.value))}
-                                className="appearance-none bg-gray-50 border border-gray-200 text-gray-700 text-sm rounded-lg focus:ring-green-500 focus:border-green-500 block w-full p-2.5 pr-8"
+                                className="appearance-none bg-white border border-slate-200 text-slate-800 text-sm rounded-lg focus:ring-emerald-500 focus:border-emerald-600 block w-full p-2.5 pr-8"
                             >
                                 <option value={7}>Last 7 Days</option>
                                 <option value={30}>Last 30 Days</option>
                                 <option value={90}>Last 3 Months</option>
                             </select>
-                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
                                 <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" /></svg>
                             </div>
                         </div>
@@ -115,7 +115,7 @@ const AnalysisPage = () => {
                 </div>
             </div>
 
-            <footer className="text-center text-xs text-gray-400 mt-12">
+            <footer className="text-center text-xs text-slate-500 mt-12">
                 All emissions shown are calculated using recorded trip data and verified emission factors.
             </footer>
         </div>

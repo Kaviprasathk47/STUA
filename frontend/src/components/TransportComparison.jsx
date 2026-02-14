@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { addTravelData } from '../services/travelService';
 import { getVehicles } from '../services/vehicleService';
 import { calculateEmission } from '../services/emissionService';
+import MicroTip from './ui/MicroTip';
 
 const TransportComparison = ({
   distanceMeters,
@@ -218,12 +219,28 @@ const TransportComparison = ({
     if (isLogging) return;
     setIsLogging(true);
     try {
+      // Map mode name to backend expected enum
+      let backendMode = 'Car'; // Default
+
+      if (mode.type === 'vehicle') {
+        // Map apiMode (car, motorcycle, bicycle) to backend Enum
+        if (mode.apiMode === 'bicycle') backendMode = 'Cycle';
+        else if (mode.apiMode === 'motorcycle') backendMode = 'Bike';
+        else backendMode = 'Car';
+      } else {
+        // Standard modes (walking, bicycle, train, bus)
+        if (mode.id === 'walking') backendMode = 'Walk';
+        else if (mode.id === 'bicycle') backendMode = 'Cycle';
+        else if (mode.id === 'train') backendMode = 'Train';
+        else if (mode.id === 'bus') backendMode = 'Bus';
+      }
+
       const tripData = {
-        mode: mode.name,
-        distance_travelled_km: parseFloat(mode.formattedDistance),
-        data_travelled_co2: parseFloat(mode.formattedEmission),
-        origin,
-        destination,
+        mode: backendMode,
+        distance: parseFloat(mode.formattedDistance),
+        emission: parseFloat(mode.formattedEmission),
+        source: origin.address || origin, // origin might be object or string
+        destination: destination.address || destination,
         sourceDisplayName: originName,
         destinationDisplayName: destinationName,
         vehicleId: mode.type === 'vehicle' ? mode.vehicleId : undefined,
@@ -245,7 +262,7 @@ const TransportComparison = ({
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mt-6">
-      <div className="p-6 border-b border-slate-100">
+      <div className="p-6 border-b border-slate-200/50">
         <div className="flex flex-col gap-6">
           <div>
             <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -257,13 +274,26 @@ const TransportComparison = ({
             </p>
           </div>
 
+          {/* Micro-tip for transport comparison */}
+          <MicroTip
+            text="Walking and cycling produce zero CO₂ for short trips, while public transport emits significantly less per person."
+            variant="success"
+            className="mt-2"
+          />
+
           {/* User Vehicles Section */}
           {vehicles.length > 0 && (
-            <div className="bg-slate-50 rounded-xl p-4 border border-slate-100">
-              <h3 className="text-sm font-semibold text-slate-700 mb-3 flex items-center gap-2">
+            <div className="bg-slate-100/50 rounded-xl p-4 border border-slate-200/50">
+              <h3 className="text-sm font-semibold text-slate-800 mb-3 flex items-center gap-2">
                 <Car className="w-4 h-4 text-slate-500" />
                 Compare Your Vehicles
               </h3>
+              {/* Micro-tip for vehicle selection */}
+              <MicroTip
+                text="Select your vehicle to get accurate CO₂ estimates based on verified datasets."
+                variant="info"
+                className="mb-3"
+              />
               <div className="flex flex-wrap gap-3">
                 {vehicles.map(v => {
                   const isSelected = selectedVehicleIds.includes(v._id);
@@ -272,13 +302,13 @@ const TransportComparison = ({
                       key={v._id}
                       onClick={() => toggleVehicleSelection(v._id)}
                       className={`px-3 py-2 rounded-lg text-sm font-medium transition-all flex items-center gap-2 border ${isSelected
-                        ? 'bg-indigo-600 text-white border-indigo-600 shadow-sm'
-                        : 'bg-white text-slate-600 border-slate-200 hover:border-slate-300'
+                        ? 'bg-blue-500/60 text-emerald-600-foreground border-primary shadow-sm'
+                        : 'bg-white text-slate-500 border-slate-200 hover:border-slate-200/80'
                         }`}
                     >
-                      <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-white' : 'bg-slate-300'}`}></span>
+                      <span className={`w-2 h-2 rounded-full ${isSelected ? 'bg-white' : 'bg-slate-100-foreground'}`}></span>
                       {v.vehicle_name}
-                      <span className={`text-xs ${isSelected ? 'text-indigo-100' : 'text-slate-400'}`}>
+                      <span className={`text-xs ${isSelected ? 'text-emerald-600-foreground/80' : 'text-slate-500'}`}>
                         ({v.vehicle_emission_rating} g/km)
                       </span>
                     </button>
@@ -296,7 +326,7 @@ const TransportComparison = ({
         </div>
       </div>
 
-      <div className="divide-y divide-slate-100">
+      <div className="divide-y divide-border/50">
         {transportModes.map((mode, index) => {
           const isBestOption = index === 0;
           const Icon = mode.icon;
@@ -305,7 +335,7 @@ const TransportComparison = ({
           return (
             <div
               key={mode.id}
-              className={`transition-colors hover:bg-slate-50 ${isExpanded ? 'bg-slate-50' : ''}`}
+              className={`transition-colors hover:bg-slate-100/50 ${isExpanded ? 'bg-slate-100/50' : ''}`}
             >
               <div
                 className="p-4 flex items-center justify-between cursor-pointer"
@@ -317,7 +347,7 @@ const TransportComparison = ({
                   </div>
                   <div>
                     <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-slate-900">{mode.name}</h3>
+                      <h3 className="font-semibold text-slate-800">{mode.name}</h3>
                       {mode.type === 'vehicle' && <span className="text-[10px] uppercase font-bold tracking-wider text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">Owner</span>}
                       {isBestOption && (
                         <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-600 bg-emerald-100 px-2 py-0.5 rounded-full">
@@ -360,7 +390,7 @@ const TransportComparison = ({
                       <span className="block text-slate-500 mb-1">Distance</span>
                       <span className="font-semibold text-slate-800 text-lg">{mode.formattedDistance} <span className="text-sm font-normal text-slate-500">km</span></span>
                     </div>
-                    <div className="sm:col-span-3 pt-2 border-t border-slate-100 mt-2 flex justify-between items-center">
+                    <div className="sm:col-span-3 pt-2 border-t border-slate-200/50 mt-2 flex justify-between items-center">
                       <div className="flex flex-col">
                         <p className="text-xs text-slate-500">
                           * Estimation based on average {mode.name.toLowerCase()} speeds and {mode.type === 'vehicle' ? 'your vehicle emission factors.' : 'standard emission factors.'}
@@ -371,16 +401,24 @@ const TransportComparison = ({
                           </p>
                         )}
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleSelectMode(mode);
-                        }}
-                        disabled={isLogging || mode.error}
-                        className="px-4 py-2 bg-indigo-600 text-white text-sm font-semibold rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
-                      >
-                        {isLogging ? 'Logging...' : 'I used this mode'}
-                      </button>
+                      {/* Micro-tip for saving trip */}
+                      <div className="flex flex-col gap-2 items-end">
+                        <MicroTip
+                          text="Saving trips helps unlock personalized sustainability insights."
+                          variant="success"
+                          className="text-right"
+                        />
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleSelectMode(mode);
+                          }}
+                          disabled={isLogging || mode.error}
+                          className="px-4 py-2 bg-blue-200 text-blue-500-foreground text-sm font-semibold rounded-lg hover:bg-blue-600/90 transition-colors disabled:opacity-50"
+                        >
+                          {isLogging ? 'Logging...' : 'I used this mode'}
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>

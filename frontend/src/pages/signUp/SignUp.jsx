@@ -148,9 +148,9 @@ const SignUpPage = () => {
                 <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
                   type="text"
-                  name="fullName"
+                  name="name"
                   placeholder="Full Name"
-                  value={formData.fullName}
+                  value={formData.name}
                   onChange={handleInputChange}
                   autoComplete="name"
                   className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-transparent outline-none transition-all bg-white/50 backdrop-blur-sm"

@@ -16,14 +16,14 @@ const Settings = () => {
     return (
         <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto bg-slate-50 min-h-screen">
             <div>
-                <h1 className="text-3xl font-bold text-gray-800">Account Settings</h1>
-                <p className="text-gray-600">Manage your profile and preferences.</p>
+                <h1 className="text-3xl font-bold text-slate-800">Account Settings</h1>
+                <p className="text-slate-500">Manage your profile and preferences.</p>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
                 {/* Sidebar Navigation */}
                 <div className="lg:col-span-1">
-                    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
                         <nav className="flex flex-col">
                             {tabs.map((tab) => {
                                 const Icon = tab.icon;
@@ -32,8 +32,8 @@ const Settings = () => {
                                         key={tab.id}
                                         onClick={() => setActiveTab(tab.id)}
                                         className={`flex items-center gap-3 px-6 py-4 text-left transition-colors ${activeTab === tab.id
-                                            ? 'bg-emerald-50 text-emerald-600 font-medium border-l-4 border-emerald-500'
-                                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border-l-4 border-transparent'
+                                            ? 'bg-emerald-50 text-emerald-600 font-medium border-l-4 border-emerald-600'
+                                            : 'text-slate-500 hover:bg-slate-100 hover:text-slate-800 border-l-4 border-transparent'
                                             }`}
                                     >
                                         <Icon className="w-5 h-5" />
@@ -55,7 +55,7 @@ const Settings = () => {
                 </div>
             </div>
 
-            <footer className="text-center text-xs text-gray-400 mt-12">
+            <footer className="text-center text-xs text-slate-500 mt-12">
                 Account settings are securely managed and apply only to your profile.
             </footer>
         </div>

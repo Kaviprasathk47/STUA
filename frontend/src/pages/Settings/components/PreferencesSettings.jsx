@@ -48,18 +48,18 @@ const PreferencesSettings = () => {
     };
 
     return (
-        <div className="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Application Preferences</h2>
+        <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-semibold mb-4 text-slate-800">Application Preferences</h2>
 
             {success && (
-                <div className="mb-4 p-3 bg-green-50 text-green-700 rounded-lg flex items-center gap-2">
+                <div className="mb-4 p-3 bg-green-50 text-green-700 border border-green-200 rounded-lg flex items-center gap-2">
                     <CheckCircle className="w-5 h-5" />
                     {success}
                 </div>
             )}
 
             {error && (
-                <div className="mb-4 p-3 bg-red-50 text-red-700 rounded-lg flex items-center gap-2">
+                <div className="mb-4 p-3 bg-red-50 text-red-600 border border-red-200 rounded-lg flex items-center gap-2">
                     <XCircle className="w-5 h-5" />
                     {error}
                 </div>
@@ -67,12 +67,12 @@ const PreferencesSettings = () => {
 
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Default Transport Mode</label>
+                    <label className="block text-sm font-medium text-slate-800 mb-2">Default Transport Mode</label>
                     <select
                         name="transportMode"
                         value={preferences.transportMode}
                         onChange={handleChange}
-                        className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
+                        className="w-full p-2.5 bg-white border border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-600"
                     >
                         <option value="Car">Car</option>
                         <option value="Bus">Bus</option>
@@ -81,29 +81,29 @@ const PreferencesSettings = () => {
                         <option value="Bicycle">Bicycle</option>
                         <option value="Walking">Walking</option>
                     </select>
-                    <p className="mt-1 text-xs text-gray-500">This mode will be selected by default when adding new trips.</p>
+                    <p className="mt-1 text-xs text-slate-500">This mode will be selected by default when adding new trips.</p>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Emission Unit</label>
+                        <label className="block text-sm font-medium text-slate-800 mb-2">Emission Unit</label>
                         <select
                             name="emissionUnit"
                             value={preferences.emissionUnit}
                             onChange={handleChange}
-                            className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full p-2.5 bg-white border border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-600"
                         >
                             <option value="kg">Kilograms (kg CO₂)</option>
                             <option value="g">Grams (g CO₂)</option>
                         </select>
                     </div>
                     <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-2">Distance Unit</label>
+                        <label className="block text-sm font-medium text-slate-800 mb-2">Distance Unit</label>
                         <select
                             name="distanceUnit"
                             value={preferences.distanceUnit}
                             onChange={handleChange}
-                            className="w-full p-2.5 bg-gray-50 border border-gray-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-500"
+                            className="w-full p-2.5 bg-white border border-slate-200 rounded-lg focus:ring-emerald-500 focus:border-emerald-600"
                         >
                             <option value="km">Kilometers (km)</option>
                             <option value="mi">Miles (mi)</option>
@@ -111,11 +111,11 @@ const PreferencesSettings = () => {
                     </div>
                 </div>
 
-                <div className="pt-4 border-t border-gray-100">
+                <div className="pt-4 border-t border-slate-200">
                     <button
                         type="submit"
                         disabled={loading}
-                        className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                        className="flex items-center gap-2 px-6 py-2.5 bg-emerald-600 text-white rounded-lg hover:bg-emerald-600/90 transition-colors disabled:opacity-50"
                     >
                         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Save className="w-5 h-5" />}
                         Save Preferences

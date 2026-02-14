@@ -9,22 +9,23 @@ import api from "../../services/axios";
 const AppLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showOnboarding, setShowOnboarding] = useState(false);
-  const { user, refreshUser } = useAuth();
+  const { user, refreshUser, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if user needs onboarding
-    if (user && user.isOnboarded === false) {
+    // Check if user needs onboarding (only after user data is loaded)
+    if (!loading && user && user.isOnboarded === false) {
       setShowOnboarding(true);
     }
-  }, [user]);
+  }, [user, loading]);
 
   const handleCompleteOnboarding = async () => {
     try {
       await api.post("/auth/complete-onboarding");
       await refreshUser(); // Refresh user data to update isOnboarded flag
       setShowOnboarding(false);
-      navigate("/dashboard");
+      const role = user?.role || "user";
+      navigate(`/${role}/dashboard`);
     } catch (error) {
       console.error("Failed to complete onboarding:", error);
       setShowOnboarding(false);

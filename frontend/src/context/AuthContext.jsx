@@ -28,12 +28,23 @@ export const AuthProvider = ({ children }) => {
 
   /** Call after successful login: store token and mark authenticated */
   const login = useCallback((token) => {
+    setLoading(true);
     setToken(token);
     // Trigger immediate fetch of user details after login
     api
       .get("/auth/me")
-      .then((res) => setUser(res.data.user))
-      .catch((err) => console.error("Failed to fetch user after login", err));
+      .then((res) => {
+        setUser(res.data.user);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user after login", err);
+        // If fetch fails, we might want to logout or keep trying?
+        // For now, assume token is valid but fetch failed? 
+        // Better to not set user if failed.
+      })
+      .finally(() => {
+        setLoading(false);
+      });
   }, [setToken]);
 
   const logout = useCallback(() => {

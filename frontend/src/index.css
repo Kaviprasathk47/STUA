@@ -8,13 +8,8 @@
   transition-property: margin, width;
 }
 
-
 /* Base styles */
-@layer base {
-  body {
-    @apply bg-slate-50 text-gray-800 antialiased;
-  }
-}
+@layer base {}
 
 /* Custom utility classes and animations */
 @layer utilities {

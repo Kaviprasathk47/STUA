@@ -36,8 +36,8 @@ const SummaryCards = ({ data }) => {
                 <div key={index} className={`p-6 rounded-2xl border ${card.color} shadow-xs transition-transform hover:scale-105`}>
                     <div className="flex items-center justify-between">
                         <div>
-                            <p className="text-sm font-medium text-gray-500">{card.title}</p>
-                            <h3 className="text-2xl font-bold text-gray-800 mt-1">{card.value}</h3>
+                            <p className="text-sm font-medium text-slate-500">{card.title}</p>
+                            <h3 className="text-2xl font-bold text-slate-800 mt-1">{card.value}</h3>
                         </div>
                         <div className="p-3 bg-white rounded-xl shadow-xs">
                             {card.icon}

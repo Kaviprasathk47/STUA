@@ -1,4 +1,3 @@
-import React from 'react';
 import { Trophy, Users, Award, Leaf } from 'lucide-react';
 
 const CommunityImpact = ({ data }) => {

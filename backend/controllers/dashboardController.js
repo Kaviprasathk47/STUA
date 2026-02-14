@@ -51,6 +51,7 @@ const getDashboardData = async (req, res) => {
 
         // Recent Trips (Top 5)
         const recentTrips = trips.slice(0, 5).map(trip => ({
+            _id: trip.tripId ? trip.tripId._id : trip._id, // Fallback to travel ID if tripId missing, though it might fail delete
             date: new Date(trip.data).toLocaleDateString(),
             mode: trip.mode ? trip.mode.charAt(0).toUpperCase() + trip.mode.slice(1) : "Unknown",
             distance: (trip.distance_travelled_km || 0).toFixed(1),

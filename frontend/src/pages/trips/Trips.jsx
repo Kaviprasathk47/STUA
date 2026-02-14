@@ -10,6 +10,7 @@ import {
 } from "@react-google-maps/api";
 import { MapPin, Navigation, Loader2, Leaf, Calendar } from "lucide-react";
 import NewPlaceSearch from "../../components/NewPlaceSearch";
+import MicroTip from "../../components/ui/MicroTip";
 // import TransportComparison from "../../components/TransportComparison";
 
 const DEFAULT_CENTER = { lat: 51.5074, lng: -0.1278 };
@@ -171,11 +172,11 @@ const Trips = () => {
   return (
     <div className="p-4 md:p-6 lg:p-8 space-y-6 md:space-y-8 max-w-7xl mx-auto bg-slate-50 min-h-screen">
       <div>
-        <h1 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        <h1 className="text-3xl font-bold text-slate-800 flex items-center gap-2">
           <MapPin className="w-8 h-8 text-emerald-600" />
           Trips
         </h1>
-        <p className="text-gray-600 mt-1">
+        <p className="text-slate-500 mt-1">
           Enter start and destination to see your route on the map.
         </p>
       </div>
@@ -183,11 +184,11 @@ const Trips = () => {
       {/* Origin & Destination inputs (modern PlaceAutocompleteElement) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Start</label>
+          <label className="block text-sm font-medium text-slate-800 mb-1">Start</label>
           <NewPlaceSearch
             placeholder="Search start location..."
             onPlaceSelected={onOriginPlaceSelected}
-            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 bg-white transition-all text-slate-700"
+            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-800 ring-offset-background focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-600 transition-all"
           />
           {origin.address && (
             <p className="mt-1 text-xs text-slate-500 truncate" title={origin.address}>
@@ -196,11 +197,11 @@ const Trips = () => {
           )}
         </div>
         <div>
-          <label className="block text-sm font-medium text-slate-700 mb-1">Destination</label>
+          <label className="block text-sm font-medium text-slate-800 mb-1">Destination</label>
           <NewPlaceSearch
             placeholder="Search destination..."
             onPlaceSelected={onDestinationPlaceSelected}
-            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 focus-within:border-emerald-500 focus-within:ring-2 focus-within:ring-emerald-500/20 bg-white transition-all text-slate-700"
+            className="w-full px-4 py-1.5 rounded-xl border border-slate-200 bg-white text-slate-800 ring-offset-background focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-emerald-600 transition-all"
           />
           {destination.address && (
             <p className="mt-1 text-xs text-slate-500 truncate" title={destination.address}>
@@ -227,21 +228,30 @@ const Trips = () => {
               }
             }}
             dateFormat="dd MMM yyyy"
-            className="w-full px-4 py-1.5 pl-4 pr-10 rounded-xl border border-slate-200 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 outline-none transition-all text-slate-700 bg-white cursor-pointer"
+            className="w-full px-4 py-1.5 pl-4 pr-10 rounded-xl border border-slate-200 bg-white text-slate-800 ring-offset-background focus:ring-2 focus:ring-emerald-500 focus:border-emerald-600 outline-none transition-all cursor-pointer"
             wrapperClassName="w-full"
             placeholderText="Select a date"
             onKeyDown={(e) => e.preventDefault()} // Prevent typing
           />
-          <Calendar className="absolute right-3 top-2.5 w-5 h-5 text-slate-400 pointer-events-none" />
+          <Calendar className="absolute right-3 top-2.5 w-5 h-5 text-slate-500 pointer-events-none" />
         </div>
       </div>
+
+      {/* Micro-tip for route calculation */}
+      {origin.place && destination.place && !directions && (
+        <MicroTip
+          text="Route distance is used to calculate emissions across different transport modes."
+          variant="info"
+          className="mb-2"
+        />
+      )}
 
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
           onClick={fetchDirections}
           disabled={!origin.place || !destination.place || routeLoading}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-emerald-600 text-white rounded-xl font-medium hover:bg-emerald-600/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
         >
           {routeLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -253,7 +263,7 @@ const Trips = () => {
         <button
           type="button"
           onClick={clearRoute}
-          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-200 text-slate-700 rounded-xl font-medium hover:bg-slate-300 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 text-slate-800 rounded-xl font-medium hover:bg-slate-100/80 transition-colors"
         >
           Clear
         </button>
@@ -265,7 +275,6 @@ const Trips = () => {
               navigate('/transport-comparison', {
                 state: {
                   distanceMeters: leg.distance.value,
-                  durationSeconds: leg.duration.value,
                   durationSeconds: leg.duration.value,
                   origin: leg.start_address,
                   originName: origin.name || leg.start_address,
