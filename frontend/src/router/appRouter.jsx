@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-import AppLayout from "../components/layout/AppLayout.jsx";
+import AppLayout from "../components/layout/appLayout.jsx";
 import ProtectedRoute from "./protectedRoute.jsx";
 import PublicRoute from "./PublicRoute.jsx";
 
