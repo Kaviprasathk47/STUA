@@ -1,4 +1,5 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
+import { environmentService } from "../services/environmentService";
 
 /**
  * Modern Google Places Autocomplete using the PlaceAutocompleteElement web component.
@@ -13,6 +14,9 @@ import { useRef, useEffect } from "react";
  */
 const NewPlaceSearch = ({ onPlaceSelected, placeholder, id, className = "" }) => {
   const containerRef = useRef(null);
+  const [aqiData, setAqiData] = useState(null);
+  const [aqiLoading, setAqiLoading] = useState(false);
+  const [aqiError, setAqiError] = useState(null);
 
   useEffect(() => {
     const g = typeof window !== "undefined" ? window.google : null;
@@ -62,6 +66,17 @@ const NewPlaceSearch = ({ onPlaceSelected, placeholder, id, className = "" }) =>
           const lng =
             typeof loc?.lng === "function" ? loc.lng() : loc?.lng;
 
+          if (lat != null && lng != null) {
+            setAqiLoading(true);
+            setAqiError(null);
+            environmentService.getAQI(lat, lng)
+              .then(data => setAqiData(data.aqi))
+              .catch(err => setAqiError("Failed to load AQI data"))
+              .finally(() => setAqiLoading(false));
+          } else {
+            setAqiData(null);
+          }
+
           onPlaceSelected?.({
             address,
             name: displayName,
@@ -89,12 +104,41 @@ const NewPlaceSearch = ({ onPlaceSelected, placeholder, id, className = "" }) =>
     };
   }, [onPlaceSelected, placeholder, id]);
 
+  const renderAqiBadge = () => {
+    if (aqiLoading) return <div className="text-sm text-gray-400 mt-2">Loading AQI...</div>;
+    if (aqiError) return <div className="text-sm text-red-500 mt-2">{aqiError}</div>;
+    if (!aqiData) return null;
+
+    let badgeColor = "";
+    let badgeText = "";
+
+    if (aqiData <= 2) {
+      badgeColor = "bg-green-100 text-green-800 border-green-200 border";
+      badgeText = "🟢 Good air quality";
+    } else if (aqiData === 3) {
+      badgeColor = "bg-yellow-100 text-yellow-800 border-yellow-200 border";
+      badgeText = "🟡 Moderate — consider cycling";
+    } else {
+      badgeColor = "bg-red-100 text-red-800 border-red-200 border";
+      badgeText = "🔴 Poor air quality — avoid driving";
+    }
+
+    return (
+        <div className={`mt-2 inline-flex items-center px-3 py-1.5 rounded-md text-sm font-medium w-fit ${badgeColor}`}>
+          {badgeText}
+        </div>
+    );
+  };
+
   return (
-    <div
-      ref={containerRef}
-      className={className}
-      aria-label={placeholder ?? "Search for a place"}
-    />
+    <div className={`relative w-full flex flex-col ${className}`}>
+      <div
+        ref={containerRef}
+        aria-label={placeholder ?? "Search for a place"}
+        className="w-full"
+      />
+      {renderAqiBadge()}
+    </div>
   );
 };
 

@@ -10,6 +10,7 @@ import travelRoutes from "./routes/travelRoutes.js";
 import emissionRoutes from "./routes/emissionRoutes.js";
 import analysisRoutes from "./routes/analysisRoutes.js";
 import userGradeRoutes from "./routes/userGradeRoutes.js";
+import environmentRoutes from "./routes/environmentRoutes.js";
 import { apiLimiter } from "./middleware/rateLimiter.js";
 // import adminRoutes from "./routes/adminRoutes.js";
 import logger from "./utils/logger.js";
@@ -49,6 +50,7 @@ app.use("/Vehicle", VehicleRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/travel", travelRoutes);
 app.use("/api/emissions", emissionRoutes);
+app.use("/api/environment", environmentRoutes);
 app.use("/analysis", analysisRoutes);
 app.use("/user-grade", userGradeRoutes);
 
