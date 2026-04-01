@@ -76,9 +76,7 @@ const Dashboard = () => {
                 <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-emerald-600 ring-4 ring-emerald-50"></div>
                 <div>
                   <span className="text-xs font-bold text-emerald-600 uppercase tracking-wider mb-1 block">Start Location</span>
-                  <p className="font-semibold text-slate-800 text-lg leading-tight">
-                    {trip.sourceDisplayName || (trip.source ? trip.source.split(',')[0] : 'Unknown Start')}
-                  </p>
+                
                   <p className="text-sm text-slate-500 mt-1">
                     {trip.source || 'Address not available'}
                   </p>
@@ -90,24 +88,10 @@ const Dashboard = () => {
                 <div className="absolute -left-[31px] top-0 w-4 h-4 rounded-full bg-red-500 ring-4 ring-red-50"></div>
                 <div>
                   <span className="text-xs font-bold text-red-600 uppercase tracking-wider mb-1 block">Destination</span>
-                  <p className="font-semibold text-slate-800 text-lg leading-tight">
-                    {trip.destinationDisplayName || (trip.destination ? trip.destination.split(',')[0] : 'Unknown Destination')}
-                  </p>
                   <p className="text-sm text-slate-500 mt-1">
                     {trip.destination || 'Address not available'}
                   </p>
                 </div>
-              </div>
-            </div>
-
-            <div className="pt-6 border-t border-slate-200 grid grid-cols-2 gap-4">
-              <div>
-                <span className="text-xs text-slate-500 block mb-1">Distance</span>
-                <span className="font-semibold text-slate-800">{trip.distance} km</span>
-              </div>
-              <div>
-                <span className="text-xs text-slate-500 block mb-1">Transport Mode</span>
-                <span className="font-semibold text-slate-800 capitalize">{trip.mode}</span>
               </div>
             </div>
           </div>
