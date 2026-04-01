@@ -9,7 +9,7 @@ const handleGoogleLogin = async (navigate, login) => {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
     const firebaseToken = await user.getIdToken();
-    const response = await api.post("http://localhost:5000/auth/firebase", {
+    const response = await api.post("/auth/firebase", {
       token: firebaseToken
     });
     if (response.data?.data?.accessToken) {
