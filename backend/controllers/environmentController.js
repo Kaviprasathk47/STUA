@@ -1,5 +1,7 @@
 import logger from "../utils/logger.js";
 
+import axios from "axios";
+
 export const getAQI = async (req, res) => {
   try {
     const { lat, lng } = req.query;
@@ -13,13 +15,11 @@ export const getAQI = async (req, res) => {
       return res.status(500).json({ message: "Server configuration error: OPENWEATHERMAP_API_KEY is missing." });
     }
 
-    const response = await fetch(`https://api.openweathermap.org/data/2.5/air_pollution?lat=${lat}&lon=${lng}&appid=${apiKey}`);
+    const response = await axios.get(`https://api.openweathermap.org/data/2.5/air_pollution`, {
+      params: { lat, lon: lng, appid: apiKey }
+    });
     
-    if (!response.ok) {
-      throw new Error(`OpenWeatherMap API responded with status ${response.status}`);
-    }
-
-    const data = await response.json();
+    const data = response.data;
     
     // Extract AQI
     if (data && data.list && data.list.length > 0) {
