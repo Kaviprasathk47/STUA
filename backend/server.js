@@ -23,7 +23,7 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://stua-m5s7.vercel.app",
     credentials: true,
   })
 );
