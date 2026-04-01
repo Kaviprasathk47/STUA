@@ -23,7 +23,8 @@ const app = express();
 // CORS configuration
 app.use(
   cors({
-    origin: "https://stua-m5s7.vercel.app",
+    origin: 'https://stua-m5s7.vercel.app', // <-- Replace with your real Vercel domain! No trailing slash.
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
   })
 );
